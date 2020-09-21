@@ -1,0 +1,22 @@
+type Proposal @entity {
+  id: ID!
+  proposalId: BigInt!
+  space: Space!
+  title: String!
+  description: String!
+  options: [String]!
+  startTimestamp: BigInt!
+  duration: BigInt!
+  creator: Bytes!
+  votes: [Vote]!
+}
+
+type Vote @entity {
+  id: ID!
+  voter: Bytes!
+  optionId: BigInt!
+}
+
+enum Space {
+  xDai
+}

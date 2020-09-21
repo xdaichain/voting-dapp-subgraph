@@ -1,0 +1,26 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: Space
+    network: xdai
+    source:
+      address: "0x46529F53c18d5932f39662E77F0E51818D107747"
+      abi: Space
+      startBlock: 12071439
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.3
+      language: wasm/assemblyscript
+      entities:
+        - Space
+      abis:
+        - name: Space
+          file: ./abis/Space.json
+      eventHandlers:
+        - event: ProposalCreated(uint256)
+          handler: handleProposalCreated
+        - event: Voted(uint256,address,uint256)
+          handler: handleVoted
+      file: ./src/mapping.ts
