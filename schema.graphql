@@ -8,15 +8,17 @@ type Proposal @entity {
   startTimestamp: BigInt!
   duration: BigInt!
   creator: Bytes!
-  votes: [Vote]!
+  votes: [Vote!] @derivedFrom(field: "proposal")
 }
 
 type Vote @entity {
   id: ID!
   voter: Bytes!
   optionId: BigInt!
+  proposal: Proposal!
 }
 
 enum Space {
   xDai
+  Balancer
 }

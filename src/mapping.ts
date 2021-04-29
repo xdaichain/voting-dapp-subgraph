@@ -1,9 +1,10 @@
-import { ProposalCreated, Voted, Space } from '../generated/Space/Space';
+import { log } from '@graphprotocol/graph-ts';
+import { ProposalCreated, Voted, Space } from '../generated/xDaiSpace/Space';
 import { Proposal, Vote } from '../generated/schema';
 
 
 export function handleProposalCreated(event: ProposalCreated): void {
-  let space = Space.bind(event.address)
+  let space = Space.bind(event.address);
   let id = space.name() + '-' + event.params.id.toString();
   let proposal = new Proposal(id);
   proposal.space = space.name();
@@ -15,6 +16,19 @@ export function handleProposalCreated(event: ProposalCreated): void {
   proposal.startTimestamp = proposalDetails.value3;
   proposal.duration = proposalDetails.value4;
   proposal.creator = proposalDetails.value5;
-  proposal.votes = [];
   proposal.save();
+}
+
+export function handleVoted(event: Voted): void {
+  let space = Space.bind(event.address);
+  let proposalId = space.name() + '-' + event.params.proposalId.toString();
+  let voteId = proposalId + '-' + event.params.voter.toHex();
+  let vote = Vote.load(voteId);
+  if (vote == null) {
+    vote = new Vote(voteId);
+    vote.voter = event.params.voter;
+    vote.proposal = proposalId;
+  }
+  vote.optionId = event.params.optionId;
+  vote.save();
 }
